@@ -132,7 +132,7 @@ class CrashDump{
 		}
 		$this->data["extensions"] = $extensions;
 
-		if($this->server->getProperty("auto-report.send-phpinfo", true) !== false){
+		if($this->server->getProperty("auto-report.enabled", true) !== false){
 			ob_start();
 			phpinfo();
 			$this->data["phpinfo"] = ob_get_contents();
@@ -209,7 +209,7 @@ class CrashDump{
 		$this->addLine("Code:");
 		$this->data["code"] = [];
 
-		if($this->server->getProperty("auto-report.send-code", true) !== false){
+		if($this->server->getProperty("auto-report.enabled", true) !== false){
 			$file = @file($error["fullFile"], FILE_IGNORE_NEW_LINES);
 			for($l = max(0, $error["line"] - 10); $l < $error["line"] + 10; ++$l){
 				$this->addLine("[" . ($l + 1) . "] " . @$file[$l]);

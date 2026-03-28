@@ -24,7 +24,7 @@ namespace pocketmine\command\defaults;
 use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\event\TranslationContainer;
-use pocketmine\Player;
+use pocketmine\{Player, Server};
 use pocketmine\utils\TextFormat;
 
 class SayCommand extends VanillaCommand{
@@ -34,9 +34,9 @@ class SayCommand extends VanillaCommand{
 			$name,
 			"%pocketmine.command.say.description",
 			"%commands.say.usage",
-			["broadcast", "announce"]
+			["broadcast", "announce","send"]
 		);
-		$this->setPermission("pocketmine.command.say");
+		$this->setPermission("pm.cmd.say");
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
@@ -44,13 +44,66 @@ class SayCommand extends VanillaCommand{
 			return true;
 		}
 
-		if(count($args) === 0){
-			$sender->sendMessage(new TranslationContainer("commands.generic.usage", [$this->usageMessage]));
+		if(empty($args) or $args < 2){
+			$sender->sendMessage("§b» §fUso: /$currentAlias [tip|msg|pop] [*|(Player)] [Msg]");
 
 			return false;
 		}
 
-		$sender->getServer()->broadcastMessage(new TranslationContainer(TextFormat::GRAY . "%chat.type.announcement", [$sender instanceof Player ? "§b" .$sender->getName(). "§7" : ($sender instanceof ConsoleCommandSender ? "§bSe§3rv§9er§7" : $sender->getName()), "§b" . implode(" ", $args)]));
+	   $via = $args[0];
+	   $dir = $args[1];
+	$m = array_slice($args, 2);
+	   $msg = implode(" ", $m);
+	   $plc = ["\n","{o}","{r}","{rp}"];
+	   $fun = [PHP_EOL,
+ count(Server::getinstance()->getOnlinePlayers()), 
+mt_rand(1,20),
+ array_rand(Server::getinstance()->getOnlinePlayers())
+];
+$msg = str_replace($plc, $fun, $msg);
+	switch(strtolower($args[0])){
+		case "msg":
+		if($args[1] === "*"){
+			Server::getinstance()->broadcastMessage($msg);
+			}elseif ($dir !== "*"){
+				
+				$p = $sender->getServer()->getPlayer($dir);
+				if($p instanceof Player){
+				$p->sendMessage($msg);
+				}else{
+ $sender->sendMessage(TextFormat::RED. "User Not Found");
+		}
+	}
+		break;
+		case "pop":
+		case "popup":
+		if($args[1] === "*"){
+			Server::getinstance()->broadcastPopup($msg);
+			}elseif ($dir !== "*"){
+				
+				$p = $sender->getServer()->getPlayer($dir);
+				if($p instanceof Player){
+				$p->sendPopup($msg);
+				}else{
+ $sender->sendMessage(TextFormat::RED. "User Not Found");
+		}
+	}
+		break;
+		case "tip":
+		if($args[1] === "*"){
+			Server::getinstance()->broadcastTip($msg);
+			}elseif ($dir !== "*"){
+				
+				$p = $sender->getServer()->getPlayer($dir);
+				if($p instanceof Player){
+				$p->sendTip($msg);
+				}else{
+ $sender->sendMessage(TextFormat::RED. "User Not Found");
+		}
+	}
+		break;
+		}
 		return true;
 	}
+		
 }

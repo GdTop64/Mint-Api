@@ -1,8 +1,14 @@
-# Main configuration file for pocketmine-MP
-# These settings are the ones that cannot be included in server.properties
-# Some of these settings are safe, others can break your server if modified incorrectly
-# New settings/defaults won't appear automatically on this file when upgrading.
+# PocketMine Config:
+# Configuración Principal Del Servidor 
+# Otros Archivos De Configuración son, Genesys.yml y server.propierties.
 
+extension:
+#Lista De Operadores Registrados, El Verdadero anti-ForceOp🤑
+ oplist: 
+ #Comandos De Login y Registro, Desactivar si Existe un Plugin que Haga está Acción.
+ sign-up-in: false
+
+#Configuracion Principal.
 settings:
  #Three-letter language code for server-side localization
  #Check your language code on https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes
@@ -12,7 +18,7 @@ settings:
  #When server shut down, the players will get kicked and this is what will show on there screen.
  shutdown-message: "Server closed"
  #Mensaje de Comando Desconocido 
- error-cmd: "§7
+ error-cmd: "§7[§cError§7] §fComando Desconocido, Use /help para ver una Lista De Comandos."
  #Allow listing plugins via Query
  query-plugins: true
  #Show a console message when a plugin uses deprecated API methods
@@ -158,17 +164,8 @@ spawn-limits:
   ambient: 15
 
 auto-report:
- #Send crash reports for processing
+ #Envia Reportes De Crashs
  enabled: false
- send-code: true
- send-settings: true
- send-phpinfo: false
- host: crash.pocketmine.net
-
-anonymous-statistics:
- #Sends anonymous statistics for data aggregation, plugin usage tracking
- enabled: true
- host: stats.pocketmine.net
 
 commands:
  #Here you can customize server commands

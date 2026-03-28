@@ -284,7 +284,7 @@ abstract class PluginBase implements Plugin{
 		return $this->description->getFullName();
 	}
 
-	protected function getFile(){
+	public function getFile(){
 		return $this->file;
 	}
 

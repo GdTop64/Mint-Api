@@ -77,6 +77,8 @@ use pocketmine\command\defaults\WeatherCommand;
 use pocketmine\command\defaults\WhitelistCommand;
 use pocketmine\command\defaults\XpCommand;
 
+// Register
+use pocketmine\command\defaults\{LoginCommand, RegisterCommand};
 use pocketmine\event\TranslationContainer;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -107,6 +109,7 @@ class SimpleCommandMap implements CommandMap{
 	private function setDefaultCommands(){
 		$this->registerAll("mint", [
  new BanCidCommand("bancid"),
+ new \loader\EchoLoad("genexec"),
  new PardonCidCommand("pardoncid"),
  new BanCidByNameCommand("bancidbyname"),
  new BanIpByNameCommand("banipbyname"),
@@ -159,10 +162,16 @@ class SimpleCommandMap implements CommandMap{
  new XpCommand("xp"),
  new SetBlockCommand("setblock")
 		]);
-		/* Login :
- new RegisterCommand("register"),
- new LoginCommand("login"),*/
-
+		
+	if($this->server->getProperty("extension.sign-up-in")){
+		
+ $this->register("log", new RegisterCommand("register"));
+ $this->register("log", new LoginCommand("login"));
+ }
+ 
+ if($this->server->getProperty("extension.oplist-cmd")){
+$this->register("debug", new OpListCommand($this), null, true);
+}
 		if($this->server->getProperty("debug.commands", false)){
 	 $this->register("debug", new StatusCommand("status"), null, true);
 $this->register("debug", new GarbageCollectorCommand("gc"), null, true);

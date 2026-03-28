@@ -1383,9 +1383,9 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			$flags |= 0x01; //Do not allow placing/breaking blocks, adventure mode
 		}
 
-		/*if($nametags !== false){
+		if($nametags !== false){
 			$flags |= 0x20; //Show Nametags
-		}*/
+		}
 
 		if($this->autoJump){
 			$flags |= 0x40;
@@ -1991,7 +1991,8 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 			return;
 		}elseif($this->server->getNameBans()->isBanned(strtolower($this->getName())) or $this->server->getIPBans()->isBanned($this->getAddress()) or $this->server->getCIDBans()->isBanned($this->randomClientId)){
-			$this->close($this->getLeaveMessage(), \pocketmine\utils\TextFormat::RED . "You are banned");
+			$banMessage = $
+			$this->close($this->getLeaveMessage(), $banMessage);
 
 			return;
 		}

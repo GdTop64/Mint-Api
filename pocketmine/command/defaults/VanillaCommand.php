@@ -27,6 +27,7 @@ use pocketmine\command\CommandSender;
 abstract class VanillaCommand extends Command{
 	const MAX_COORD = 30000000;
 	const MIN_COORD = -30000000;
+#	private self::$instance;
 
 	public function __construct($name, $description = "", $usageMessage = null, array $aliases = []){
 		parent::__construct($name, $description, $usageMessage, $aliases);
@@ -53,7 +54,13 @@ abstract class VanillaCommand extends Command{
 
 		return $this->getDouble($sender, $input, $min, $max);
 	}
-
+	
+/**
+	 * @return Server
+	 */
+	public function getServer(){
+		return $this->server;
+	}
 	protected function getDouble(CommandSender $sender, $value, $min = self::MIN_COORD, $max = self::MAX_COORD){
 		$i = (double) $value;
 

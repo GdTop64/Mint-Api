@@ -24,8 +24,7 @@ namespace pocketmine\command\defaults;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat as T;
-use pocketmine\Player;
-use pocketmine\Server;
+use pocketmine\{Server, Player};
 
 class NickCommand extends VanillaCommand{
 
@@ -35,7 +34,7 @@ class NickCommand extends VanillaCommand{
 			"Cambia El Nick del Usuario.",
 			"Uso : /Nick [Nick] [User]"
 		);
-		$this->setPermission("pocketmine.cmd.nick");
+		$this->setPermission("pm.cmd.nick");
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
@@ -49,26 +48,44 @@ class NickCommand extends VanillaCommand{
 			}
 		
 	if(empty($args)){
-		$this->usageMessage;
+		$sender->sendMessage("§b»§f Uso: /$currentAlias [Nick] [User]");
 		return true;
 		}
 		
 		$nick = $args[0];
-		$user = $this->getServer()->getPlayer($args[1]);
-		if(strlen($nick) > 20){
-			$sender->sendMessage(T::RED . "El Nombre es demasiado largo!");
+		$target = $sender;
+		if(isset($args[1])){
+			$target = Server::getinstance()->getPlayer($args[1]);
+			
 			return true;
 			}
-	    if(!isset($user)){
-				$user = $sender;
-		   }
-		if(!$user){
-			$sender->sendMessage(T::RED . "$nick No ha Sido encontrado.");
-			return true;
-			}
-		$user->setDisplayName($nick);
-		$user->setNameTag($nick);
-		$sender->sendMessage("El Nick de $user Ha Sido Establecido a \"$nick§r§f\"");
-		$user->sendMessage("Tu Nick Ha Sido Establecido a \"$nick§r§f\"");
-		}
-	}		
+			
+			if($target instanceof Player or $sender instanceof Player){
+				$target->setDisplayName($nick);
+				$target->setNameTag($nick);
+				if($target === $sender){
+				$sender->sendMessage("§b» §fTu Nick Ha Sido Establecido a $nick");
+				} else{
+					$sender->sendMessage("§b» §fEl Nick de $target Ha Sido Establecido a $nick");
+					
+$target->sendMessage("§b» §fTu Nick Ha Sido Establecido a $nick");
+}
+
+
+				} else{
+					if(!$sender instanceof Player){
+					Server::getinstance()->getLogger()->info(T::RED ."Nececitas 2 Argumentos Estando En Consola!");
+					return true;
+					}
+					$sender->sendMessage(T::RED ."Jugador no encontrado.");
+					return true;
+					}
+		
+		if(strtolower($nick) === "off"){
+			$target->setDisplayName($target->getName());
+            $target->setNameTag($target->getName());
+            $target->sendMessage(T::AQUA . "Tu Nick ha sido restablecido.");
+            return true;
+        }
+      }
+    }

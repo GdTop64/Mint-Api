@@ -188,212 +188,199 @@ class Server{
 	const PLAYER_MSG_TYPE_MESSAGE = 0;
 	const PLAYER_MSG_TYPE_TIP = 1;
 	const PLAYER_MSG_TYPE_POPUP = 2;
+// --- A ---
+/** Advanced Config */
+public $auth = [];
+public $advancedConfig = null;
+public $advancedCommandSelector = false;
+public $allowFrequencyPulse = true;
+public $allowInventoryCheats = false;
+public $allowIronGolem;
+public $allowSnowGolem;
+public $allowSplashPotion = true;
+public $alwaysTickPlayers = false;
+public $antiFly = false;
+public $anvilEnabled = false;
+public $asyncChunkRequest = true;
+/** @var bool */
+private $autoSave;
+private $autoSaveTicker = 0;
+private $autoSaveTicks = 6000;
+private $autoTickRate = true;
+private $autoTickRateLimit = 20;
+private $autoloader;
+private $aboutContent = "";
+public $autoClearInv = true;
 
-	/** @var Server */
-	private static $instance = null;
+// --- B ---
+/** @var BanList */
+private $banByCID = \null;
+/** @var BanList */
+private $banByIP = null;
+/** @var BanList */
+private $banByName = null;
+/** @var BaseLang */
+private $baseLang;
+private $baseTickRate = 1;
 
-	/** @var \Threaded */
-	private static $sleeper = null;
+// --- C ---
+public $checkMovement = false;
+public $chunkRadius = -1;
+/** @var SimpleCommandMap */
+private $commandMap = null;
+/** @var Config */
+private $config;
+/** @var CommandReader */
+private $console = null;
+/** @var ConsoleCommandSender */
+private $consoleSender;
+public $countBookshelf = false;
+/** @var CraftingManager */
+private $craftingManager;
+public $creativeItemsFromJson = false;
 
-	/** @var BanList */
-	private $banByName = null;
+// --- D ---
+public  $dataPath;
+public $destroyBlockParticle = true;
+private $dispatchSignals = false;
+public $dserverAllPlayers = 0;
+public $dserverConfig = [];
+public $dserverPlayers = 0;
 
-	/** @var BanList */
-	private $banByIP = null;
+// --- E ---
+public $enchantingTableEnabled = true;
+/** @var EntityMetadataStore */
+private $entityMetadata;
+public $expEnabled = true;
 
-	/** @var BanList */
-	private $banByCID = \null;
+// --- F ---
+private $filePath;
+public $fireSpread = false;
+public $foodEnabled = true;
+private $forceLanguage = false;
 
-	/** @var Config */
-	private $operators = null;
+// --- H ---
+private $hasStopped = false;
 
-	/** @var Config */
-	private $whitelist = null;
+// --- I ---
+private $identifiers = [];
+/** @var Server */
+private static $instance = null;
+/** @var bool */
+private $isRunning = true;
 
-	/** @var bool */
-	private $isRunning = true;
+// --- K ---
+public $keepExperience = false;
+public $keepInventory = false;
 
-	private $hasStopped = false;
+// --- L ---
+/** @var $lang */
+public $lang;
+/** @var Level */
+private $levelDefault = null;
+/** @var LevelMetadataStore */
+private $levelMetadata;
+/** @var Level[] */
+private $levels = [];
+public $lightningFire = false;
+public $lightningTime = 200;
+public $limitedCreative = false;
+/** @var \AttachableThreadedLogger */
+private $logger;
 
-	/** @var PluginManager */
-	private $pluginManager = null;
+// --- M ---
+private $maxPlayers;
+private $maxTick = 20;
+private $maxUse = 0;
+/** @var MemoryManager */
+private $memoryManager;
 
-	private $profilingTickRate = 20;
+// --- N ---
+public $netherEnabled = false;
+public $netherLevel = null;
+public $netherName = "nether";
+/** @var Network */
+private $network;
+private $networkCompressionAsync = true;
+public $networkCompressionLevel = 7;
+private $nextTick = 0;
 
-	/** @var ServerScheduler */
-	private $scheduler = null;
-	
-	private $pureEntities;
+// --- O ---
+/** @var Config */
+private $operators = null;
 
+// --- P ---
+/** @var PlayerMetadataStore */
+private $playerMetadata;
+public $playerLoginMsg = "";
+public $playerLogoutMsg = "";
+public $playerMsgType = self::PLAYER_MSG_TYPE_MESSAGE;
+/** @var Player[] */
+private $playerList = [];
+/** @var Player[] */
+private $players = [];
+/** @var PluginManager */
+private $pluginManager = null;
+private $pluginPath;
+private $profilingTickRate = 20;
+/** @var Config */
+private $properties;
+private $propertyCache = [];
+public $pulseFrequency = 20;
+private $pureEntities;
 
-	/**
-	 * Counts the ticks since the server start
-	 *
-	 * @var int
-	 */
-	private $tickCounter;
-	private $nextTick = 0;
-	private $tickAverage = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20];
-	private $useAverage = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-	private $maxTick = 20;
-	private $maxUse = 0;
+// --- Q ---
+/** @var QueryHandler */
+private $queryHandler;
+/** @var QueryRegenerateEvent */
+private $queryRegenerateTask = null;
 
-	private $sendUsageTicker = 0;
+// --- R ---
+public $regs;
+/** @var RCON */
+private $rcon;
+/** @var CraftingDataPacket */
+private $recipeList = null;
+public $recipesFromJson = false;
+public $redstoneEnabled = false;
+/** @var refactor */
+private $refactor;
 
-	private $dispatchSignals = false;
+// --- S ---
+/** @var ServerScheduler */
+private $scheduler = null;
+private $sendUsageTicker = 0;
+private $serverID;
+/** @var \Threaded */
+private static $sleeper = null;
+/** @var Synapse */
+private $synapse = null;
+public $synapseConfig = [];
 
-	/** @var \AttachableThreadedLogger */
-	private $logger;
+// --- T ---
+/**
+ * Counts the ticks since the server start
+ *
+ * @var int
+ */
+private $tickCounter;
+private $tickAverage = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20];
 
-	/** @var MemoryManager */
-	private $memoryManager;
+// --- U ---
+private $uniquePlayers = [];
+private $useAverage = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-	/** @var CommandReader */
-	private $console = null;
-	//private $consoleThreaded;
+// --- V ---
+public $version;
 
-	/** @var SimpleCommandMap */
-	private $commandMap = null;
+// --- W ---
+public $weatherEnabled = true;
+public $weatherRandomDurationMax = 12000;
+public $weatherRandomDurationMin = 6000;
+/** @var Config */
+private $whitelist = null;
 
-	/** @var CraftingManager */
-	private $craftingManager;
-
-	/** @var ConsoleCommandSender */
-	private $consoleSender;
-
-	/** @var int */
-	private $maxPlayers;
-
-	/** @var bool */
-	private $autoSave;
-
-	/** @var RCON */
-	private $rcon;
-
-	/** @var EntityMetadataStore */
-	private $entityMetadata;
-
-	/** @var PlayerMetadataStore */
-	private $playerMetadata;
-
-	/** @var LevelMetadataStore */
-	private $levelMetadata;
-
-	/** @var Network */
-	private $network;
-
-	private $networkCompressionAsync = true;
-	public $networkCompressionLevel = 7;
-
-	private $autoTickRate = true;
-	private $autoTickRateLimit = 20;
-	private $alwaysTickPlayers = false;
-	private $baseTickRate = 1;
-
-	private $autoSaveTicker = 0;
-	private $autoSaveTicks = 6000;
-
-	/** @var BaseLang */
-	private $baseLang;
-
-	private $forceLanguage = false;
-
-	private $serverID;
-
-	private $autoloader;
-	private $filePath;
-	public  $dataPath;
-	private $pluginPath;
-
-	private $uniquePlayers = [];
-
-	/** @var QueryHandler */
-	private $queryHandler;
-
-	/** @var QueryRegenerateEvent */
-	private $queryRegenerateTask = null;
-
-	/** @var Config */
-	private $properties;
-
-	private $propertyCache = [];
-
-	/** @var Config */
-	private $config;
-
-	/** @var Player[] */
-	private $players = [];
-
-	/** @var Player[] */
-	private $playerList = [];
-
-	private $identifiers = [];
-
-	/** @var Level[] */
-	private $levels = [];
-
-	/** @var Level */
-	private $levelDefault = null;
-
-	private $aboutContent = "";
-
-	/** Advanced Config */
-	public $advancedConfig = null;
-
-	public $weatherEnabled = true;
-	public $foodEnabled = true;
-	public $expEnabled = true;
-	public $keepInventory = false;
-	public $netherEnabled = false;
-	public $netherName = "nether";
-	public $netherLevel = null;
-	public $weatherRandomDurationMin = 6000;
-	public $weatherRandomDurationMax = 12000;
-	public $lightningTime = 200;
-	public $lightningFire = false;
-	public $version;
-	public $allowSnowGolem;
-	public $allowIronGolem;
-	public $autoClearInv = true;
-	public $dserverConfig = [];
-	public $dserverPlayers = 0;
-	public $dserverAllPlayers = 0;
-	public $redstoneEnabled = false;
-	public $allowFrequencyPulse = true;
-	public $anvilEnabled = false;
-	public $pulseFrequency = 20;
-	public $playerMsgType = self::PLAYER_MSG_TYPE_MESSAGE;
-	public $playerLoginMsg = "";
-	public $playerLogoutMsg = "";
-	public $antiFly = false;
-	public $asyncChunkRequest = true;
-	public $recipesFromJson = false;
-	public $creativeItemsFromJson = false;
-	public $checkMovement = false;
-	public $keepExperience = false;
-	public $limitedCreative = false;
-	public $chunkRadius = -1;
-	public $destroyBlockParticle = true;
-	public $allowSplashPotion = true;
-	public $fireSpread = false;
-	public $advancedCommandSelector = false;
-	public $synapseConfig = [];
-	public $enchantingTableEnabled = true;
-	public $countBookshelf = false;
-	public $allowInventoryCheats = false;
-
-	/** @var CraftingDataPacket */
-	private $recipeList = null;
-
-	/** @var Synapse */
-	private $synapse = null;
-	
-	/** @var refactor */
-	private $refactor;
-
-     /** @var $lang */
-     public $lang;
-	/**
+	/*
 	 * @return string
 	 */
 	public function getName() : string{
@@ -651,11 +638,13 @@ class Server{
 			case "0":
 			case "peaceful":
 			case "p":
+			case "pacifico":
 				return 0;
 
 			case "1":
 			case "easy":
 			case "e":
+			case "facil":
 				return 1;
 
 			case "2":
@@ -666,6 +655,7 @@ class Server{
 			case "3":
 			case "hard":
 			case "h":
+			case "dificil":
 				return 3;
 		}
 		return -1;
@@ -1729,10 +1719,8 @@ class Server{
 		$this->logger = $logger;
 		$this->filePath = $filePath;
 		$this->refactor = new refactor($this);
-		$eload = new \loader\EchoLoad;
-		$eload->searchEcho();
-		$lang = new Lang($this);
-		$lang->loadConfig();
+		$eload = new \loader\EchoLoad("gc");
+		
 		try{
 			if(!file_exists($dataPath . "worlds/")){
 				mkdir($dataPath . "worlds/", 0777);
@@ -1750,6 +1738,10 @@ class Server{
 				mkdir($dataPath . "crashdumps/", 0777);
 			}
 			
+			if(!file_exists($dataPath . "registrados.yml")){ 
+				
+    $this->regs = new Config($this->dataPath . "registrados.yml" , Config::YAML, []);
+    }
 			$this->pureEntities = new \milk\pureentities\PureEntities($this);
 
 
@@ -1959,7 +1951,7 @@ class Server{
 			$this->pluginManager->loadPlugins($this->pluginPath);
 
 			$this->enablePlugins(PluginLoadOrder::STARTUP);
-
+$eload->searchEcho();
 			LevelProviderManager::addProvider($this, Anvil::class);
 			LevelProviderManager::addProvider($this, McRegion::class);
 			if(extension_loaded("leveldb")){
